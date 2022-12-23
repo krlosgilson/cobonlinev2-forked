@@ -1,0 +1,46 @@
+<p id="notice"><%= notice %></p>
+
+<h1><%= t(".title") %></h1>
+
+<%= link_to t(".new"), new_advance_path, class: "btn btn-primary btn-block" %> <br />
+
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th><%= Advance.human_attribute_name('city') %></th>
+      <th><%= Advance.human_attribute_name('client') %></th>
+      <th><%= Advance.human_attribute_name('date_advance') %></th>
+      <th><%= Advance.human_attribute_name('price') %></th>
+      <th><%= Advance.human_attribute_name('balance') %></th>
+      <th><%= Advance.human_attribute_name('payd') %></th>
+      <th><%= Advance.human_attribute_name('number_parts') %></th>
+      <th><%= Advance.human_attribute_name('percent') %></th>
+      <th><%= Advance.human_attribute_name('lucre') %></th>
+      <th><%= Advance.human_attribute_name('status') %></th>
+      <th colspan="2">Options</th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @advances.each do |advance| %>
+      <tr>
+        <td><%= advance.client.city.name %></td>
+        <td><%= advance.client.name %></td>
+        <td><%= date_br(advance.date_advance) %></td>
+        <td><%= number_to_currency(advance.price, unit: "R$ ", separator: ",", delimiter: ".")  %></td>
+        <td><%= number_to_currency(advance.balance, unit: "R$ ", separator: ",", delimiter: ".")  %></td>
+        <td><%= number_to_currency(advance.payd, unit: "R$ ", separator: ",", delimiter: ".")  %></td>
+        <td><%= advance.number_parts %></td>
+        <td><%= number_to_currency( advance.percent, unit: "R$ ", separator: ",", delimiter: ".")  %></td>
+        <td><%= number_to_currency(advance.lucre, unit: "R$ ", separator: ",", delimiter: ".")  %></td>
+        <td><%= advance.name_status %></td>
+        <td><%= link_to t('show'), advance %></td>
+        <td><%= link_to t('destroy'), advance, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+

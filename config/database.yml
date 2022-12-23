@@ -1,0 +1,21 @@
+default: &default
+  adapter: postgresql
+  encoding: unicode
+  pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
+  username: <%= Rails.application.credentials.dig(:development, :postgres_username) %>
+  password: <%= Rails.application.credentials.dig(:development, :postgres_password) %>
+  host: localhost
+
+development:
+  <<: *default
+  database: cobonline_development
+
+test:
+  <<: *default
+  database: cobonline_test
+
+production:
+  <<: *default
+  database: cobonline_production
+  username: cobonline
+  password: <%= ENV['COBONLINE_DATABASE_PASSWORD'] %>

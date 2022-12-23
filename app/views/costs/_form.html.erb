@@ -1,0 +1,23 @@
+<%= form_for(@cost) do |f| %>
+  <% if @cost.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@cost.errors.count, "error") %> prohibited this cost from being saved:</h2>
+
+      <ul>
+      <% @cost.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="form-group">
+    <%= f.label :name %><br>
+    <%= f.text_field :name, {class: "form-control"} %>
+  </div>
+
+  <div class="form-group">
+    <%= f.submit class: 'btn btn-primary btn-block'  %>
+    <%= link_to t('back'), costs_path, class: 'btn btn-default btn-block' %>
+  </div>
+<% end %>

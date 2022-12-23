@@ -1,0 +1,72 @@
+<%= form_for(@advance) do |f| %>
+  <% if @advance.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@advance.errors.count, "error") %> prohibited this advance from being saved:</h2>
+
+      <ul>
+      <% @advance.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+<!--   <div class="form-group">
+    <%#= f.label :date_advance %><br>
+    <%#= f.date_select :date_advance, {class: "form-control"} %>
+  </div>
+ -->  <div class="form-group">
+    <%= f.label :date_advance, "Data" %><br>
+    <% if @advance.new_record? %> 
+      <%= f.text_field :date_advance, value: date_br(DateTime.now), class: "form-control datepicker" %>
+    <% else %>
+      <%= f.text_field :date_advance, value: date_br(@advance.date_ocurrence), class: "form-control datepicker" %>
+    <% end %>
+  </div>
+
+
+  <div class="form-group">
+    <%= label_tag :city_id, Advance.human_attribute_name('city')  %> <br>
+    <%= select_tag 'city_id', options_from_collection_for_select(City.all, 'id', 'name'), :prompt => "Selecione a cidade", class: "form-control" %>
+  </div>
+
+  <div class="form-group">
+    <%= f.label :client_id %><br>
+    <%= f.select( :client_id, Client.order(:name).limit(1).collect {|c| [c.name, c.id]} , {include_blank: true}, {class: "form-control"} )%>
+    <%#= f.select( :client_id, "", {:prompt => "Primeiro informe a cidade"}, {class: "form-control"} )%>
+  </div>
+
+  <div class="form-group">
+    <%= f.label :price %><br>
+    <%= f.text_field :price, {class: "form-control"} %>
+  </div>
+
+  <div class="form-group">
+    <%= f.label :number_parts %><br>
+    <%= f.text_field :number_parts, {value: 20, class: "form-control"} %>
+  </div>
+  <div class="form-group">
+    <%= f.label :percent %><br>
+    <%= f.text_field :percent, {value: 15, class: "form-control"} %>
+  </div>
+  <div class="form-group">
+    <%= f.submit class: 'btn btn-primary btn-block'  %>
+    <%= link_to t('back'), advances_path, class: 'btn btn-default btn-block' %>
+  </div>
+<% end %>
+
+<script type="text/javascript">
+  $(function(){
+    $("#city_id").change(function(){
+      var city = "city_id="+$(this).val();
+      console.log(city);
+      $.getJSON('/get_client_for_city', city, function(data){
+        var options = '<option value="">SELECIONE O CLIENTE</option>'; 
+        $.each(data, function(i, item) {
+          options += '<option value="' + item.id + '">' + item.n + '</option>';
+        });
+        $("#advance_client_id").html(options);
+      });
+    });
+  });
+</script>

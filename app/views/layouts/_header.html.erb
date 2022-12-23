@@ -1,0 +1,58 @@
+<% if user_signed_in? %>
+<nav class="navbar navbar-expand-lg bg-light">
+  <div class="container-fluid">
+    <% if user_signed_in?and current_page?('/') %>
+      <% if current_user.admin?  %> 
+        <%= link_to "CobOnline", dashboard_path, class: "navbar-brand" %>
+      <% else %>
+        <%= link_to "CobOnline", root_path, class: "navbar-brand" %>
+      <% end %>
+    <% else %>
+      <%= link_to "CobOnline", root_path, class: "navbar-brand" %>
+    <% end %>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+        <% if user_signed_in? %>
+          <% if current_user.admin? %>
+            <li class="nav-item">
+              <a class="nav-link active" aria-current="page" href="/"><%= t('links.dashboard') %></a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" aria-current="page" href="/cities"><%= t('links.cities') %></a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" aria-current="page" href="/costs"><%= t('links.costs') %></a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" aria-current="page" href="/holidays"><%= t('links.holidays') %></a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" aria-current="page" href="/clients"><%= t('links.clients') %></a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" aria-current="page" href="/advances"><%= t('links.advances') %></a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" aria-current="page" href="/current_accounts"><%= t('links.cash') %></a>
+            </li>
+          <% else %>
+            <li class="nav-item">
+              <a class="nav-link active" aria-current="page" href="/item_advances"><%= t('links.pay_parcels') %></a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" aria-current="page" href="/current_accounts/index_user_operator"><%= t('links.cash') %></a>
+            </li>
+          <% end %>
+        <% end %>
+      </ul>
+      <% if user_signed_in? %>
+        <%= button_to "Sair", destroy_user_session_path, method: :delete, class:"btn btn-outline-primary", style: "--bs-btn-font-weight: 600;" %>
+      <% end %>
+    </div>
+  </div>
+</nav>
+
+<% end %>

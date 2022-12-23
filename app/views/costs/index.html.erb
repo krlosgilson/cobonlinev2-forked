@@ -1,0 +1,26 @@
+<p id="notice"><%= notice %></p>
+
+<h1><%= t(".title") %></h1>
+
+<%= link_to t(".new"), new_cost_path, class: "btn btn-primary btn-block" %> <br />
+
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th><%= Cost.human_attribute_name('name') %></th>
+      <th colspan="3"><%= t(".option") %></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @costs.each do |city| %>
+      <tr>
+        <td><%= city.name %></td>
+        <td><%= link_to t('show'), city %></td>
+        <td><%= link_to t('edit'), edit_city_path(city) %></td>
+        <td><%= link_to t('destroy'), city, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
