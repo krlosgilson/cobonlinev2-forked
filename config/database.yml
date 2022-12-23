@@ -19,5 +19,4 @@ test:
 
 production:
   <<: *default
-  database: cobonline_production
   url: <%= ENV["DATABASE_URL"] %>
