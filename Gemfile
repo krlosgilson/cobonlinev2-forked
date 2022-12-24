@@ -53,6 +53,7 @@ gem "bootsnap", require: false
 
 gem "devise", "~> 4.8"
 gem "ransack"
+gem 'will_paginate-bootstrap-style'
 
 group :development, :test do
   # See https://guides.rubyonrails.org/debugging_rails_applications.html#debugging-with-the-debug-gem
