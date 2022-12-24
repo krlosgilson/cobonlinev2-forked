@@ -2,21 +2,12 @@ default: &default
   adapter: postgresql
   encoding: unicode
   pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
-
+  host: postgres
+  user: postgres
+  password: postgres
 development:
   <<: *default
-  database: cobonline_development
-  host: localhost
-  username: postgres
-  password: postgres
-
+  database: cobonline_dev
 test:
   <<: *default
   database: cobonline_test
-  host: localhost
-  username: postgres
-  password: postgres
-
-production:
-  <<: *default
-  url: <%= ENV["DATABASE_URL"] %>
