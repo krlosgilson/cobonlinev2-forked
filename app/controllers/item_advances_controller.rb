@@ -6,7 +6,7 @@ class ItemAdvancesController < ApplicationController
     if current_user.admin?
       @item_advances = ItemAdvance.joins(:advance).includes(:client).where("DATE(item_advances.due_date) = ? and advances.status = ?", Date.today.to_s, Advance::TypeStatus::ABERTO)
     else
-      @item_advances.items_user(current_user) 
+      @item_advances = ItemAdvance.items_user(current_user) 
     end
   end
 
