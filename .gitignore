@@ -36,3 +36,4 @@
 /node_modules
 
 Gemfile.lock
+.byebug_history

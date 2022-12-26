@@ -1,4 +1,5 @@
 require 'util'
+
 class ItemAdvance < ActiveRecord::Base
 	include Util
   belongs_to :advance
@@ -7,6 +8,12 @@ class ItemAdvance < ActiveRecord::Base
 
   scope :order_asc, -> { order(due_date: :asc) }
   scope :order_desc, -> { order(due_date: :desc) }
+
+  def self.items_user(user)
+    city_id = user.city_id || nil
+    @clients = Client.where(city_id: city_id)
+    ItemAdvance.joins(:advance).includes(:client).where("DATE(item_advances.due_date) = ? and advances.status = ? and advances.client_id in (?) ", Date.today.to_s, Advance::TypeStatus::ABERTO, @clients.ids)
+  end
 
   def baixa_parcela(date, value)
   	last_parts = self.advance.item_advances.last

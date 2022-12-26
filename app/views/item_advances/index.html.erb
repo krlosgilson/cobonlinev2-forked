@@ -43,7 +43,7 @@
 </div>
 
 <% @item_advances.each do |item| %> 
-   <% if !item.date_payment.nil? %>
+   <% if item.date_payment.nil? %>
       <div class="card mb-3" style="max-width: 22rem; border-left: 3px solid --bs-danger;">
         <div class="card-header text-bg-danger"><%= link_to item.client.name, edit_item_advance_path(item), style: 'text-decoration: none; color: white' %></div>
         <div class="card-body">
