@@ -9,9 +9,15 @@
 <!--     <strong>Atraso:</strong> <%#= @item_advance.atraso.to_f %> <br /> -->
  
     <div>
-      <strong>Valor Pago:</strong>
-      <%= number_field_tag :value_payment, nil, class: "form-control" %>
+<!--      <strong>Valor Pago:</strong>
+      <%#= number_field_tag :value_payment, nil, class: "form-control" %>
     </div>
+-->
+  <div class="input-group mb-3">
+    <span class="input-group-text">Valor Pago</span>
+    <%= text_field_tag :value_payment, nil, class: "form-control" %>
+    <span class="input-group-text">.00</span>
+  </div>
 
     <div>
       <strong>Notes:</strong>

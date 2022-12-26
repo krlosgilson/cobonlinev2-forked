@@ -1,3 +1,4 @@
+require "byebug"
 class ItemAdvancesController < ApplicationController
   before_action :authenticate_user!
   #respond_to :html
@@ -15,15 +16,16 @@ class ItemAdvancesController < ApplicationController
   end
 
   def update
+    byebug
     if params[:value_payment].blank?
-      redirect_to item_advances_path, :flash => { :danger => "Informe o valor da parcela" } 
+      redirect_to item_advances_path, :flash => { :alert => "Informe o valor da parcela" } 
       return
     end 
     @item_advance = ItemAdvance.find(params[:id])
     respond_to do |format|
       if @item_advance.update(date_payment: Date.current.to_s, value_payment: params[:value_payment], note: params[:note])
         @item_advance.baixa_parcela(Date.current.to_s, params[:value_payment].to_f)
-        flash[:success] = "Parcela foi atualizada com sucesso."
+        flash[:notice] = "Parcela foi atualizada com sucesso."
         #format.html { redirect_to item_advances_path, success: 'ItemAdvance was successfully updated.' }
         #format.html { redirect_to select_client_path }
         format.html { redirect_to item_advances_path }
