@@ -54,7 +54,7 @@
       <th><%= Advance.human_attribute_name('value_payment') %></th>
       <th><%= Advance.human_attribute_name('dalay') %></th>
       <th><%= Advance.human_attribute_name('note') %></th>
-      <th colspan="3"></th>
+      <th><%= Advance.human_attribute_name('options') %></th>
     </tr>
   </thead>
 
@@ -68,6 +68,9 @@
         <td><%= item.value_payment %></td>
         <td><%= item.dalay %></td>
         <td><%= item.note %></td>
+        <td>
+          <%= link_to Advance.human_attribute_name('edit'), edit_item_advance_path(item), style: 'text-decoration: none;' if item.due_date <= Date.current && item.date_payment.present? %>
+        </td>
       </tr>
     <% end %>
   </tbody>
