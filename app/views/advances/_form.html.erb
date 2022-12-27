@@ -20,14 +20,8 @@
     <% if @advance.new_record? %> 
       <%= f.text_field :date_advance, value: date_br(DateTime.now), class: "form-control datepicker" %>
     <% else %>
-      <%= f.text_field :date_advance, value: date_br(@advance.date_ocurrence), class: "form-control datepicker" %>
+      <%= f.text_field :date_advance, value: date_br(@advance.date_advance), class: "form-control datepicker" %>
     <% end %>
-  </div>
-
-
-  <div class="form-group">
-    <%= label_tag :city_id, Advance.human_attribute_name('city')  %> <br>
-    <%= select_tag 'city_id', options_from_collection_for_select(City.all, 'id', 'name'), :prompt => "Selecione a cidade", class: "form-control" %>
   </div>
 
   <div class="form-group">

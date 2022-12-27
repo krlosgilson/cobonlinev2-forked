@@ -99,8 +99,7 @@ class Advance < ActiveRecord::Base
     
   end
 
-  # def has_paid?
-  #   retorno = payd != 0.00
-  #   puts ">>>>>>>>>>>>>>> payd?: #{retorno}"
-  # end
+  def has_paid?
+    item_advances.where.not(date_payment: nil).present?
+  end
 end

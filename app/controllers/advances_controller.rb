@@ -34,6 +34,10 @@ class AdvancesController < ApplicationController
 
   # GET /advances/1/edit
   def edit
+    if @advance.has_paid?
+      redirect_to advances_path, :flash => { :alert => "Emprestimo com paracelas pagas, não é possível editar." } 
+      return
+    end
   end
 
   # POST /advances
