@@ -14,7 +14,6 @@ class AdvancesController < ApplicationController
     render :text => sub.to_json
   end
 
-
   # GET /advances
   # GET /advances.json
   def index
@@ -59,13 +58,15 @@ class AdvancesController < ApplicationController
   # PATCH/PUT /advances/1
   # PATCH/PUT /advances/1.json
   def update
+    old_value = @advance.price - @advance.lucre
+
     respond_to do |format|
-      if @advance.update(advance_params)
+      if @advance.update_and_cache(advance_params, old_value)
         format.html { redirect_to @advance, notice: 'Advance was successfully updated.' }
         format.json { render :show, status: :ok, location: @advance }
       else
-        format.html { render :edit }
-        format.json { render json: @advance.errors, status: :unprocessable_entity }
+        redirect_to advances_path, :flash => { :alert => "Ocorreu um erro ao editar o emprestimo, tente novamente." } 
+        return
       end
     end
   end
