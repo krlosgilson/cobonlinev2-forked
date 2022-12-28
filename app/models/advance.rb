@@ -12,7 +12,7 @@ class Advance < ActiveRecord::Base
 
   after_create :generate_item
   after_create :generate_current_account
-
+  
   scope :order_asc, -> { includes(:client, :city).order(date_advance: :asc) }
   scope :order_desc, -> { includes(:client, :city).order(date_advance: :desc) }
   scope :advances_open, -> { where(status: TypeStatus::ABERTO) }
@@ -63,6 +63,33 @@ class Advance < ActiveRecord::Base
     CurrentAccount.create!(type_launche: type_launche , city_id: city.id, cost_id: cost, date_ocurrence: self.date_advance, price: price, historic: historic )
   end
 
+  def update_and_cache(params, old_value)
+    ActiveRecord::Base.transaction do
+      update!(params)
+      #Creditar o Estorno
+      CurrentAccount.create!(
+        type_launche: CurrentAccount::TypeLaunche::CREDITO, 
+        city_id: city.id, 
+        cost_id: Cost::TypeCost::PAGAMENTO_EMPRESTIMO,
+        date_ocurrence: date_advance, 
+        price: old_value, 
+        historic: "ESTORNO PGTO DE EMPRESTIMO - #{self.client.name}" 
+      )
+      # Debita novo valor ao caixa
+      CurrentAccount.create!(
+        type_launche: CurrentAccount::TypeLaunche::DEBITO, 
+        city_id: city.id, 
+        cost_id: Cost::TypeCost::PAGAMENTO_EMPRESTIMO,
+        date_ocurrence: self.date_advance, 
+        price: price - lucre, 
+        historic: "PGTO DE EMPRESTIMO - #{self.client.name}" 
+      )
+      true
+    end
+  rescue
+    puts "Oops. We tried to do an invalid operation!"
+  end
+
   def balance
     (self.price - self.item_advances.sum(:value_payment)).to_f
   end
@@ -99,8 +126,7 @@ class Advance < ActiveRecord::Base
     
   end
 
-  # def has_paid?
-  #   retorno = payd != 0.00
-  #   puts ">>>>>>>>>>>>>>> payd?: #{retorno}"
-  # end
+  def has_paid?
+    item_advances.where.not(date_payment: nil).present?
+  end
 end

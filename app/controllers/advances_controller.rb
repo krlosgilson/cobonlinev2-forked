@@ -14,7 +14,6 @@ class AdvancesController < ApplicationController
     render :text => sub.to_json
   end
 
-
   # GET /advances
   # GET /advances.json
   def index
@@ -34,6 +33,10 @@ class AdvancesController < ApplicationController
 
   # GET /advances/1/edit
   def edit
+    if @advance.has_paid?
+      redirect_to advances_path, :flash => { :alert => "Emprestimo com paracelas pagas, não é possível editar." } 
+      return
+    end
   end
 
   # POST /advances
@@ -55,13 +58,15 @@ class AdvancesController < ApplicationController
   # PATCH/PUT /advances/1
   # PATCH/PUT /advances/1.json
   def update
+    old_value = @advance.price - @advance.lucre
+
     respond_to do |format|
-      if @advance.update(advance_params)
+      if @advance.update_and_cache(advance_params, old_value)
         format.html { redirect_to @advance, notice: 'Advance was successfully updated.' }
         format.json { render :show, status: :ok, location: @advance }
       else
-        format.html { render :edit }
-        format.json { render json: @advance.errors, status: :unprocessable_entity }
+        redirect_to advances_path, :flash => { :alert => "Ocorreu um erro ao editar o emprestimo, tente novamente." } 
+        return
       end
     end
   end
@@ -69,6 +74,11 @@ class AdvancesController < ApplicationController
   # DELETE /advances/1
   # DELETE /advances/1.json
   def destroy
+    if @advance.has_paid?
+      redirect_to advances_path, :flash => { :alert => "Emprestimo com paracelas pagas, não é possível excluir." } 
+      return
+    end
+
     @advance.destroy
     respond_to do |format|
       format.html { redirect_to advances_url, notice: 'Advance was successfully destroyed.' }

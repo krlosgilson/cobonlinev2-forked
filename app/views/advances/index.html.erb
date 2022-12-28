@@ -35,7 +35,11 @@
         <td><%= number_to_currency(advance.lucre, unit: "R$ ", separator: ",", delimiter: ".")  %></td>
         <td><%= advance.name_status %></td>
         <td><%= link_to t('show'), advance %></td>
-        <td><%= link_to t('destroy'), advance, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+        <td>
+          <%#= link_to t('destroy'), advance, method: :delete, data: { confirm: 'Are you sure?' } %>
+          <%= link_to "Destroy", advance_path(advance), data: {turbo_method: :delete, turbo_confirm: "Are you sure?" } %>
+        </td>
+        
       </tr>
     <% end %>
   </tbody>
