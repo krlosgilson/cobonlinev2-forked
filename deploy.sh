@@ -5,7 +5,7 @@ source /home/admin/cobonline.env
 kill -INT $(cat tmp/pids/server.pid)
 
 #Pull changes from repository
-git pull
+git pull --rebase
 
 #Bundle
 bundle check || bundle install
