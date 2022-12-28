@@ -19,9 +19,16 @@ class ItemAdvancesController < ApplicationController
       redirect_to item_advances_path, :flash => { :alert => "Informe o valor da parcela" } 
       return
     end 
+
     @item_advance = ItemAdvance.find(params[:id])
     respond_to do |format|
-      if @item_advance.update(date_payment: Date.current.to_s, value_payment: params[:value_payment], note: params[:note])
+      updated = false
+      if current_user.admin?
+        updated = @item_advance.update(date_payment: params[:date_payment], value_payment: params[:value_payment], note: params[:note]) 
+      else
+        updated = @item_advance.update(date_payment: Date.current.to_s, value_payment: params[:value_payment], note: params[:note]) 
+      end
+      if updated
         @item_advance.baixa_parcela(Date.current.to_s, params[:value_payment].to_f)
         if current_user.admin? 
           flash[:notice] = "Parcela foi atualizada com sucesso."

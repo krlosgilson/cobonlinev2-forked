@@ -12,6 +12,8 @@ class Advance < ActiveRecord::Base
 
   after_create :generate_item
   after_create :generate_current_account
+
+  before_destroy :reversal_current_account
   
   scope :order_asc, -> { includes(:client, :city).order(date_advance: :asc) }
   scope :order_desc, -> { includes(:client, :city).order(date_advance: :desc) }
@@ -61,6 +63,17 @@ class Advance < ActiveRecord::Base
     price = self.price - self.lucre
     historic = "PGTO DE EMPRESTIMO - #{self.client.name}"
     CurrentAccount.create!(type_launche: type_launche , city_id: city.id, cost_id: cost, date_ocurrence: self.date_advance, price: price, historic: historic )
+  end
+
+  def reversal_current_account
+    CurrentAccount.create!(
+      type_launche: CurrentAccount::TypeLaunche::CREDITO, 
+      city_id: city.id, 
+      cost_id: Cost::TypeCost::PAGAMENTO_EMPRESTIMO,
+      date_ocurrence: date_advance, 
+      price: price - lucre, 
+      historic: "ESTORNO PGTO DE EMPRESTIMO - #{self.client.name}" 
+    )
   end
 
   def update_and_cache(params, old_value)
@@ -119,7 +132,7 @@ class Advance < ActiveRecord::Base
     date_advance = Date.current
 
     ActiveRecord::Base.transaction do
-      self.update_attributes(status: TypeStatus::FECHADO)
+      self.update(status: TypeStatus::FECHADO)
       Advance.create!(client_id: client_id, date_advance: date_advance, price: price, percent: percent, number_parts: number_parts, status: TypeStatus::ABERTO)
       puts ">>>>>>>>>>>>>>>>> recalculo efetuado com sucesso."
     end
